@@ -1,11 +1,11 @@
 package platformclientv2
 
 import (
-	"strings"
-	"fmt"
-	"errors"
-	"net/url"
 	"encoding/json"
+	"errors"
+	"fmt"
+	"net/url"
+	"strings"
 	"time"
 )
 
@@ -36,7 +36,7 @@ func NewBillingApiWithConfig(config *Configuration) *BillingApi {
 //
 // Report is of the billable usages (e.g. licenses and devices utilized) for a given period. If response&#39;s status is InProgress, wait a few seconds, then try the same request again.
 func (a BillingApi) GetBillingReportsBillableusage(startDate time.Time, endDate time.Time) (*Billingusagereport, *APIResponse, error) {
-	var httpMethod = "GET"
+	httpMethod := "GET"
 	// create path and map variables
 	path := a.Configuration.BasePath + "/api/v2/billing/reports/billableusage"
 	defaultReturn := new(Billingusagereport)
@@ -64,21 +64,19 @@ func (a BillingApi) GetBillingReportsBillableusage(startDate time.Time, endDate 
 	// authentication (PureCloud OAuth) required
 
 	// oauth required
-	if a.Configuration.AccessToken != ""{
-		headerParams["Authorization"] =  "Bearer " + a.Configuration.AccessToken
+	if a.Configuration.AccessToken != "" {
+		headerParams["Authorization"] = "Bearer " + a.Configuration.AccessToken
 	}
 	// add default headers if any
 	for key := range a.Configuration.DefaultHeader {
 		headerParams[key] = a.Configuration.DefaultHeader[key]
 	}
-	
-	queryParams["startDate"] = a.Configuration.APIClient.ParameterToString(startDate, "")
-	
-	queryParams["endDate"] = a.Configuration.APIClient.ParameterToString(endDate, "")
-	
+
+	queryParams["startDate"] = startDate.Format(time.RFC3339)
+	queryParams["endDate"] = endDate.Format(time.RFC3339)
 
 	// to determine the Content-Type header
-	localVarHttpContentTypes := []string{ "application/json",  }
+	localVarHttpContentTypes := []string{"application/json"}
 
 	// set Content-Type header
 	localVarHttpContentType := a.Configuration.APIClient.SelectHeaderContentType(localVarHttpContentTypes)
@@ -117,7 +115,7 @@ func (a BillingApi) GetBillingReportsBillableusage(startDate time.Time, endDate 
 //
 // Tax Disclaimer: Prices returned by this API do not include applicable taxes. It is the responsibility of the customer to pay all taxes that are appropriate in their jurisdiction. See the PureCloud API Documentation in the Developer Center for more information about this API: https://developer.mypurecloud.com/api/rest/v2/
 func (a BillingApi) GetBillingTrusteebillingoverviewTrustorOrgId(trustorOrgId string, billingPeriodIndex int) (*Trusteebillingoverview, *APIResponse, error) {
-	var httpMethod = "GET"
+	httpMethod := "GET"
 	// create path and map variables
 	path := a.Configuration.BasePath + "/api/v2/billing/trusteebillingoverview/{trustorOrgId}"
 	path = strings.Replace(path, "{trustorOrgId}", fmt.Sprintf("%v", trustorOrgId), -1)
@@ -141,19 +139,18 @@ func (a BillingApi) GetBillingTrusteebillingoverviewTrustorOrgId(trustorOrgId st
 	// authentication (PureCloud OAuth) required
 
 	// oauth required
-	if a.Configuration.AccessToken != ""{
-		headerParams["Authorization"] =  "Bearer " + a.Configuration.AccessToken
+	if a.Configuration.AccessToken != "" {
+		headerParams["Authorization"] = "Bearer " + a.Configuration.AccessToken
 	}
 	// add default headers if any
 	for key := range a.Configuration.DefaultHeader {
 		headerParams[key] = a.Configuration.DefaultHeader[key]
 	}
-	
+
 	queryParams["billingPeriodIndex"] = a.Configuration.APIClient.ParameterToString(billingPeriodIndex, "")
-	
 
 	// to determine the Content-Type header
-	localVarHttpContentTypes := []string{ "application/json",  }
+	localVarHttpContentTypes := []string{"application/json"}
 
 	// set Content-Type header
 	localVarHttpContentType := a.Configuration.APIClient.SelectHeaderContentType(localVarHttpContentTypes)
@@ -185,4 +182,3 @@ func (a BillingApi) GetBillingTrusteebillingoverviewTrustorOrgId(trustorOrgId st
 	}
 	return successPayload, response, err
 }
-
